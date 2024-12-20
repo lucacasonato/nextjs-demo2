@@ -1,20 +1,12 @@
-import { revalidateTag, unstable_cache } from "next/cache";
-
-const getCurrentTime = unstable_cache(
-  async () => {
-    return new Date().toISOString();
-  },
-  ["time"],
-  { revalidate: false, tags: ["time"] },
-);
+import { revalidatePath } from "next/cache";
 
 export default async function Page() {
   async function invalidateCache() {
     "use server";
-    revalidateTag("time");
+    revalidatePath("/isr");
   }
 
-  const time = await getCurrentTime();
+  const time = Date.now();
   return (
     <div>
       <p>Current time: {time}</p>
