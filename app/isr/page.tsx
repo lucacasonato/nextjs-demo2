@@ -1,23 +1,24 @@
-import { revalidateTag, unstable_cache } from "next/cache"
+import { revalidateTag, unstable_cache } from "next/cache";
 
 const getCurrentTime = unstable_cache(
   async () => {
-    return new Date().toISOString()
+    return new Date().toISOString();
   },
-  ['time'],
-  { tags: ['time'] }
-)
-
+  ["time"],
+  { revalidate: false, tags: ["time"] },
+);
 
 export default async function Page() {
   async function invalidateCache() {
-    'use server'
-    revalidateTag("time")
+    "use server";
+    revalidateTag("time");
   }
 
-  const time = await getCurrentTime()
-  return <div>
-    <p>Current time: {time}</p>
-    <button onClick={invalidateCache}>Invalidate cache</button>
-  </div>
+  const time = await getCurrentTime();
+  return (
+    <div>
+      <p>Current time: {time}</p>
+      <button onClick={invalidateCache}>Invalidate cache</button>
+    </div>
+  );
 }
